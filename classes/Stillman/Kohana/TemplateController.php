@@ -17,15 +17,21 @@ class TemplateController extends \Kohana_Controller
 		parent::before();
 	}
 
-	public function render($view, array $data = array())
+	public function render($view = NULL, array $data = array())
 	{
-		if ($view[0] === '/')
+		if ( ! $view)
+		{
+			// No view name specified, take it from action name
+			$view = $this->request->action();
+		}
+		elseif ($view[0] === '/')
 		{
 			// This is an absolute path, do not add controller/directory prefix
 			$view = substr($view, 1);
 		}
 		else
 		{
+			// The view is relative to the controller
 			$view = strtolower(str_replace('_', '/', $this->request->controller())).'/'.$view;
 		}
 
