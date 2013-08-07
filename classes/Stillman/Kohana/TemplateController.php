@@ -2,7 +2,12 @@
 
 namespace Stillman\Kohana;
 
-class TemplateController extends \Kohana_Controller
+use Kohana_Controller;
+use Kohana_Exception;
+use Stillman\Filters\Filter;
+use View;
+
+class TemplateController extends Kohana_Controller
 {
 	public $layout = null;
 
@@ -11,10 +16,29 @@ class TemplateController extends \Kohana_Controller
 	// Layout view object
 	protected $_layout;
 
+	public function filters()
+	{
+		// Nothing by default
+		return array();
+	}
+
 	public function before()
 	{
+		foreach ($this->filters() as $filter)
+		{
+			$class = $filter['class'];
+			$obj = new $class($this, $filter);
+
+			if ( ! $obj instanceof Filter)
+			{
+				throw new Kohana_Exception('Invalid filter class');
+			}
+
+			$obj->run();
+		}
+
 		$this->_layout = new \View;
-		parent::before();
+		return parent::before();
 	}
 
 	public function render($view = NULL, array $data = array())
@@ -38,7 +62,7 @@ class TemplateController extends \Kohana_Controller
 		$data['_controller'] = $this;
 		$data['_layout'] = $this->_layout;
 
-		$content = \View::factory($view, $data)->render();
+		$content = View::factory($view, $data)->render();
 
 		if ($this->layout)
 		{
