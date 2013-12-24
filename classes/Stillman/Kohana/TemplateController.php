@@ -11,7 +11,7 @@ class TemplateController extends Kohana_Controller
 {
 	public $layout = null;
 
-	protected $actions = array();
+	protected $actions = [];
 
 	// Layout view object
 	protected $_layout;
@@ -19,7 +19,7 @@ class TemplateController extends Kohana_Controller
 	public function filters()
 	{
 		// Nothing by default
-		return array();
+		return [];
 	}
 
 	public function before()
@@ -41,7 +41,7 @@ class TemplateController extends Kohana_Controller
 		return parent::before();
 	}
 
-	public function render($view = NULL, array $data = array())
+	public function render($view = NULL, array $data = [])
 	{
 		if ( ! $view)
 		{
@@ -56,8 +56,12 @@ class TemplateController extends Kohana_Controller
 		}
 		else
 		{
-			// The view is relative to the controller
-			$view = strtolower(str_replace('_', '/', $this->request->controller())).'/'.$view;
+			$directory = $this->request->directory();
+			$controller = $this->request->controller();
+			$path = $directory ? $directory.'/'.$controller : $controller;
+
+			// The view is relative to the controller and directory
+			$view = strtolower(str_replace('_', '/', $path)).'/'.$view;
 		}
 
 		$data['_controller'] = $this;
