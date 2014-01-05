@@ -41,7 +41,7 @@ class TemplateController extends Kohana_Controller
 		return parent::before();
 	}
 
-	public function render($view = NULL, array $data = [])
+	public function render($view = NULL, array $data = [], $render_layout = true)
 	{
 		if ( ! $view)
 		{
@@ -69,7 +69,7 @@ class TemplateController extends Kohana_Controller
 
 		$content = View::factory($view, $data)->render();
 
-		if ($this->layout)
+		if ($this->layout and $render_layout)
 		{
 			$this->_layout->set_filename($this->layout);
 			$this->_layout->content = $content;
@@ -78,6 +78,14 @@ class TemplateController extends Kohana_Controller
 		}
 
 		$this->response->body($content);
+	}
+
+	/**
+	 * Render a view without layout
+	 */
+	public function renderPartial($view, array $data = [])
+	{
+		return $this->render($view, $data, false);
 	}
 
 	public function execute()
