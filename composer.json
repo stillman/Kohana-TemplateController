@@ -1,0 +1,22 @@
+{
+	"name": "stillman/kohana-templatecontroller",
+	"description": "Extended controller class for Kohana 3.x with standalone actions and filters",
+	"type": "kohana-module",
+	"keywords": ["kohana", "template"],
+	"homepage": "https://github.com/stillman/Kohana-TemplateController",
+	"license": "GPL",
+
+	"authors": [
+		{
+			"name": "Dmitry Stillman",
+			"email": "dmitry.stillman@gmail.com",
+			"homepage": "http://mentalsoftware.net",
+			"role": "Developer"
+		}
+    ],
+
+	"require": {
+		"php": ">=5.3.3",
+		"composer/installers": "~1.0"
+	}
+}
