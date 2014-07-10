@@ -9,11 +9,16 @@ use View;
 
 class TemplateController extends Kohana_Controller
 {
+	/**
+	 * @var string|null Layout view filename
+	 */
 	public $layout = null;
 
 	protected $actions = [];
 
-	// Layout view object
+	/**
+	 * @var View|null Layout view object
+	 */
 	protected $_layout;
 
 	public function filters()
@@ -41,7 +46,23 @@ class TemplateController extends Kohana_Controller
 		return parent::before();
 	}
 
-	public function render($view = NULL, array $data = [], $render_layout = true)
+	/**
+	 * @param string $view
+	 * @param array $data
+	 * @param bool|string $render_layout
+	 */
+	public function render($view = null, array $data = [], $render_layout = true)
+	{
+		$this->response->body($this->renderToString($view, $data, $render_layout));
+	}
+
+	/**
+	 * @param string $view
+	 * @param array $data
+	 * @param bool|string $render_layout
+	 * @return string
+	 */
+	public function renderToString($view = null, array $data = [], $render_layout = false)
 	{
 		if ( ! $view)
 		{
@@ -69,15 +90,29 @@ class TemplateController extends Kohana_Controller
 
 		$content = View::factory($view, $data)->render();
 
-		if ($this->layout and $render_layout)
+		if ($render_layout)
 		{
-			$this->_layout->set_filename($this->layout);
-			$this->_layout->content = $content;
-			$this->_layout->_controller = $this;
-			$content = $this->_layout->render();
+			$_layout = null;
+
+			if (is_string($render_layout))
+			{
+				$_layout = $render_layout;
+			}
+			elseif ($this->layout)
+			{
+				$_layout = $this->layout;
+			}
+
+			if ($_layout)
+			{
+				$this->_layout->set_filename($_layout);
+				$this->_layout->content = $content;
+				$this->_layout->_controller = $this;
+				$content = $this->_layout->render();
+			}
 		}
 
-		$this->response->body($content);
+		return $content;
 	}
 
 	/**
