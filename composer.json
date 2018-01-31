@@ -4,7 +4,7 @@
 	"type": "kohana-module",
 	"keywords": ["kohana", "template"],
 	"homepage": "https://github.com/stillman/Kohana-TemplateController",
-	"license": "GPL",
+	"license": "GPL-3.0-or-later",
 
 	"authors": [
 		{
